@@ -1,14 +1,13 @@
 package com.jatin.movietracker.dtos.responses;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
     private String token;
-    private String expiresIn;
+    private Long expiresIn;
     private String username;
 }

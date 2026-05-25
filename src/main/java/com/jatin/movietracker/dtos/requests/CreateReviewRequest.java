@@ -1,15 +1,13 @@
 package com.jatin.movietracker.dtos.requests;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.w3c.dom.Text;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateReviewRequest {
     private Long apiMovieId;
-    private Text comment;
+    private String comment;
     private Integer rating;
 }

@@ -1,29 +1,33 @@
 package com.jatin.movietracker.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Data
+@Table(
+        name = "watched_movies",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "api_movie_id"})
+        }
+)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WatchedMovie {
+public class WatchedMovie extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name = "api_movie_id", nullable = false)
     private Long apiMovieId;
 
     private Boolean watched;
-    private LocalDateTime createdAt;
 
 }

@@ -1,3 +1,21 @@
 spring:
   application:
     name: movietracker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_name
+    username: your_username
+    password: your_password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: your_key
+  expiration: 86400000

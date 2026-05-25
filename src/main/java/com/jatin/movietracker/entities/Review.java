@@ -1,38 +1,45 @@
 package com.jatin.movietracker.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.w3c.dom.Text;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Data
+@Table(
+        name = "reviews",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"user_id", "api_movie_id"}
+                )
+        }
+)
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+public class Review extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            nullable = false
+    )
     private User user;
+
+    @Column(name = "api_movie_id", nullable = false)
     private Long apiMovieId;
 
     @Min(1)
     @Max(5)
     private Integer rating;
 
-    private Text comment;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Column(columnDefinition = "TEXT")
+    private String comment;
 
 }
