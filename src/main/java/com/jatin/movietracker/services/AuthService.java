@@ -8,49 +8,66 @@ import com.jatin.movietracker.repositories.UserRepository;
 import com.jatin.movietracker.security.JwtService;
 import com.jatin.movietracker.utils.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 public class AuthService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private JwtService jwtService;
+    private final JwtService jwtService;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthService(UserRepository userRepository, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AuthResponse authenticateSignup(SignupRequest signupRequest) {
-        Optional<User> user = userRepository.findByEmail(signupRequest.getEmail());
-        if (user.isPresent()) {
-            return null;
+        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+            throw new RuntimeException("Email already exists");
         }
 
-        User userEntity = AuthUtils.converSignUpRequestToNewUser(signupRequest);
-        userRepository.save(userEntity);
+        if (userRepository.existsByUsername(signupRequest.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
+        User user = AuthUtils.converSignUpRequestToNewUser(signupRequest, encodedPassword);
+        User savedUser = userRepository.save(user);
+        String token = jwtService.generateToken(savedUser.getEmail());
+
         AuthResponse authResponse = new AuthResponse();
-        authResponse.setUsername(userEntity.getUsername());
-        authResponse.setToken(jwtService.generateToken(userEntity.getEmail()));
+        authResponse.setUsername(savedUser.getUsername());
+        authResponse.setToken(token);
         authResponse.setExpiresIn(jwtService.getExpiration());
-        return authResponse;
+
+        return AuthUtils.buildAuthResponse(savedUser.getUsername(), token, jwtService.getExpiration());
     }
 
     public AuthResponse authenticateLogin(LoginRequest loginRequest) {
-        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
-        if (user.isPresent()) {
-            User userEntity = user.get();
-            AuthResponse authResponse = new AuthResponse();
-            authResponse.setUsername(userEntity.getUsername());
-            authResponse.setToken(jwtService.generateToken(userEntity.getEmail()));
-            authResponse.setExpiresIn(jwtService.getExpiration());
-            return authResponse;
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+        );
 
-        return null;
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "User not found"
+                                )
+                        );
+
+        String token = jwtService.generateToken(user.getEmail());
+        return AuthUtils.buildAuthResponse(user.getUsername(), token, jwtService.getExpiration());
     }
 }
