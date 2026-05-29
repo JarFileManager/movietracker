@@ -12,7 +12,7 @@ public class AuthUtils {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPassword(encodedPassword);
-        user.setRole(Role.ADMIN); //Default Role for now.
+        user.setRole(Role.USER); //TODO: Later need to incorporate logic for deciding Role.
         return user;
     }
 

@@ -19,3 +19,9 @@ spring:
 jwt:
   secret: your_key
   expiration: 86400000
+
+
+
+tmdb:
+  access-token: your_access_token
+  base-url: https://api.themoviedb.org/3

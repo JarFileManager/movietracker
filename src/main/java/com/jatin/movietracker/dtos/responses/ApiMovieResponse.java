@@ -13,9 +13,9 @@ public class ApiMovieResponse {
     private Long id;
     private String title;
     private String overview;
-    private String posterPath;
+    private String posterUrl;
     private String backdropPath;
     private LocalDateTime releaseDate;
-    private Double voteAverage;
+    private Double rating;
     private List<Integer> genreIds;
 }
