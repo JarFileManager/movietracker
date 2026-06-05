@@ -1,5 +1,6 @@
 package com.jatin.movietracker.controllers;
 
+import com.jatin.movietracker.dtos.requests.GetRandomMovieRequest;
 import com.jatin.movietracker.dtos.responses.ApiMovieResponse;
 import com.jatin.movietracker.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class MovieController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<ApiMovieResponse> getRandomMovies() {
-        return ResponseEntity.ok().body(new ApiMovieResponse());
+    public ResponseEntity<ApiMovieResponse> getRandomMovie() {
+        return ResponseEntity.ok().body(movieService.getRandomMovie());
     }
 
     @GetMapping("/search")
@@ -29,9 +30,9 @@ public class MovieController {
         return ResponseEntity.ok(movieService.searchMovies(query));
     }
 
-    @GetMapping("/genre/{genreId}")
-    public ResponseEntity<List<ApiMovieResponse>> getMoviesByGenre(@PathVariable Integer genreId) {
-        return ResponseEntity.ok().body(List.of(new ApiMovieResponse()));
+    @GetMapping("/discover")
+    public ResponseEntity<List<ApiMovieResponse>> discoverMoviesWithFilters(@RequestBody GetRandomMovieRequest request) {
+        return ResponseEntity.ok().body(movieService.discoverMoviesWithFilters(request));
     }
 
     @GetMapping("/{movieId}")

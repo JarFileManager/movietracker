@@ -1,5 +1,6 @@
 package com.jatin.movietracker.services;
 
+import com.jatin.movietracker.dtos.requests.GetRandomMovieRequest;
 import com.jatin.movietracker.dtos.responses.ApiMovieResponse;
 import com.jatin.movietracker.tmdb.TmdbClient;
 import com.jatin.movietracker.tmdb.TmdbMovie;
@@ -34,5 +35,19 @@ public class MovieService {
     public ApiMovieResponse getMovie(Long movieId) {
         TmdbMovie movie = tmdbClient.getMovie(movieId);
         return MovieUtils.convert(movie);
+    }
+
+    public ApiMovieResponse getRandomMovie() {
+        TmdbSearchResponse response = tmdbClient.getRandomMovie(null);
+        return MovieUtils.convert(response.getResults().get(MovieUtils.getRandomInt(0, response.getResults().size() - 1)));
+    }
+
+    public List<ApiMovieResponse> discoverMoviesWithFilters(GetRandomMovieRequest request) {
+        TmdbSearchResponse response = tmdbClient.getRandomMovie(request);
+        return response
+                .getResults()
+                .stream()
+                .map(MovieUtils::convert)
+                .toList();
     }
 }

@@ -57,4 +57,36 @@ class MovieControllerTest {
         assertNotNull(result.getBody());
         assertEquals("Inception", result.getBody().getTitle());
     }
+
+    @Test
+    void getRandomMovie_ShouldReturnRandomMovie() {
+        ApiMovieResponse movie = new ApiMovieResponse();
+        movie.setId(1L);
+        movie.setTitle("Interstellar");
+
+        when(movieService.getRandomMovie()).thenReturn(movie);
+
+        ResponseEntity<ApiMovieResponse> result = movieController.getRandomMovie();
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
+        assertEquals("Interstellar", result.getBody().getTitle());
+    }
+
+    @Test
+    void discoverMoviesWithFilters_ShouldReturnMovies() {
+        com.jatin.movietracker.dtos.requests.GetRandomMovieRequest request = new com.jatin.movietracker.dtos.requests.GetRandomMovieRequest();
+        ApiMovieResponse movie = new ApiMovieResponse();
+        movie.setId(1L);
+        movie.setTitle("The Dark Knight");
+
+        when(movieService.discoverMoviesWithFilters(request)).thenReturn(List.of(movie));
+
+        ResponseEntity<List<ApiMovieResponse>> result = movieController.discoverMoviesWithFilters(request);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
+        assertEquals(1, result.getBody().size());
+        assertEquals("The Dark Knight", result.getBody().get(0).getTitle());
+    }
 }

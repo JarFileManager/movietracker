@@ -51,4 +51,26 @@ class MovieUtilsTest {
         assertThat(MovieUtils.getDateTime("")).isNull();
         assertThat(MovieUtils.getDateTime("   ")).isNull();
     }
+
+    @Test
+    void shouldReturnRandomIntWithinRange() {
+        int min = 1;
+        int max = 10;
+        int result = MovieUtils.getRandomInt(min, max);
+        assertThat(result).isBetween(min, max);
+    }
+
+    @Test
+    void shouldConvertIntegerListToString() {
+        List<Integer> list = List.of(1, 2, 3);
+        String result = MovieUtils.convertIntegerListToString(list);
+        assertThat(result).isEqualTo("1%2C2%2C3");
+    }
+
+    @Test
+    void shouldConvertSingleItemIntegerListToString() {
+        List<Integer> list = List.of(1);
+        String result = MovieUtils.convertIntegerListToString(list);
+        assertThat(result).isEqualTo("1");
+    }
 }

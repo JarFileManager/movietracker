@@ -6,6 +6,8 @@ import com.jatin.movietracker.tmdb.TmdbMovie;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MovieUtils {
 
@@ -32,5 +34,20 @@ public class MovieUtils {
             return null;
         }
         return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE).atStartOfDay();
+    }
+
+    public static int getRandomInt(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    }
+
+    public static String convertIntegerListToString(List<Integer> list) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i));
+            if(i != list.size() - 1) {
+                sb.append("%2C");
+            }
+        }
+        return sb.toString();
     }
 }

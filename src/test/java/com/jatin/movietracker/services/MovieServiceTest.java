@@ -1,5 +1,6 @@
 package com.jatin.movietracker.services;
 
+import com.jatin.movietracker.dtos.requests.GetRandomMovieRequest;
 import com.jatin.movietracker.dtos.responses.ApiMovieResponse;
 import com.jatin.movietracker.tmdb.TmdbClient;
 import com.jatin.movietracker.tmdb.TmdbMovie;
@@ -55,5 +56,40 @@ class MovieServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getTitle()).isEqualTo("Inception");
+    }
+
+    @Test
+    void getRandomMovie_ShouldReturnMovie() {
+        TmdbMovie movie = new TmdbMovie();
+        movie.setId(1L);
+        movie.setTitle("Interstellar");
+
+        TmdbSearchResponse searchResponse = new TmdbSearchResponse();
+        searchResponse.setResults(List.of(movie));
+
+        when(tmdbClient.getRandomMovie(null)).thenReturn(searchResponse);
+
+        ApiMovieResponse result = movieService.getRandomMovie();
+
+        assertThat(result).isNotNull();
+        assertThat(result.getTitle()).isEqualTo("Interstellar");
+    }
+
+    @Test
+    void discoverMoviesWithFilters_ShouldReturnMovies() {
+        GetRandomMovieRequest request = new GetRandomMovieRequest();
+        TmdbMovie movie = new TmdbMovie();
+        movie.setId(1L);
+        movie.setTitle("The Dark Knight");
+
+        TmdbSearchResponse searchResponse = new TmdbSearchResponse();
+        searchResponse.setResults(List.of(movie));
+
+        when(tmdbClient.getRandomMovie(request)).thenReturn(searchResponse);
+
+        List<ApiMovieResponse> results = movieService.discoverMoviesWithFilters(request);
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).getTitle()).isEqualTo("The Dark Knight");
     }
 }
