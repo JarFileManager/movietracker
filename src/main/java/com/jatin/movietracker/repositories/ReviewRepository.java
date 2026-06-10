@@ -11,10 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    Optional<Review> findByUserAndApiMovieId(
-            User user,
-            Long apiMovieId
-    );
+    Optional<Review> findByUserAndApiMovieId(User user, Long apiMovieId);
 
-    List<Review> findByApiMovieId(Long apiMovieId);
+    List<Review> findByUser(User user);
 }

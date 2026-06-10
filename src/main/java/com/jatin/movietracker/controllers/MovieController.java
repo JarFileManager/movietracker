@@ -30,7 +30,7 @@ public class MovieController {
         return ResponseEntity.ok(movieService.searchMovies(query));
     }
 
-    @GetMapping("/discover")
+    @PostMapping("/discover")
     public ResponseEntity<List<ApiMovieResponse>> discoverMoviesWithFilters(@RequestBody GetRandomMovieRequest request) {
         return ResponseEntity.ok().body(movieService.discoverMoviesWithFilters(request));
     }
