@@ -9,6 +9,7 @@ import com.jatin.movietracker.utils.ReviewUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,9 +42,7 @@ public class ReviewService {
         }
 
         review.setRating(request.getRating());
-
         review.setComment(request.getComment());
-
         Review saved = reviewRepository.save(review);
 
         return ReviewUtils.reviewToReviewResponseConverter(saved);
@@ -60,11 +59,11 @@ public class ReviewService {
         return null;
     }
 
-    public List<ReviewResponse> getMovieReviews(){
+    public List<ReviewResponse> getMyMovieReviews(){
         User user = userService.getCurrentUser();
         List<Review> reviews = reviewRepository.findByUser(user);
         if(reviews.isEmpty()){
-            return null;
+            return Collections.emptyList();
         }
 
         return reviews.stream().map(ReviewUtils::reviewToReviewResponseConverter).collect(Collectors.toList());

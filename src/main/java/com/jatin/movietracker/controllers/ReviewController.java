@@ -28,12 +28,16 @@ public class ReviewController {
 
     @GetMapping("/me/{apiMovieId}")
     public ResponseEntity<ReviewResponse> getMyReview(@PathVariable Long apiMovieId) {
-        return ResponseEntity.ok().body(reviewService.getMyReview(apiMovieId));
+        ReviewResponse reviewResponse = reviewService.getMyReview(apiMovieId);
+        if (reviewResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(reviewResponse);
     }
 
     @GetMapping("/me")
     public ResponseEntity<List<ReviewResponse>> getMyReviews() {
-        return ResponseEntity.ok().body(reviewService.getMovieReviews());
+        return ResponseEntity.ok().body(reviewService.getMyMovieReviews());
     }
 
     @PutMapping("/{reviewId}")

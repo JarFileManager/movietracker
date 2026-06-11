@@ -9,6 +9,7 @@ import com.jatin.movietracker.utils.WatchUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,6 @@ public class WatchService {
     public WatchedMovieResponse markMovieAsWatched(MarkWatchedRequest request) {
 
         User user = userService.getCurrentUser();
-
         Optional<WatchedMovie> existingMovie = watchedMovieRepository.findByUserAndApiMovieId(user, request.getApiMovieId());
 
         if (existingMovie.isPresent()) {
@@ -40,17 +40,18 @@ public class WatchService {
         movie.setWatched(request.getWatched());
 
         WatchedMovie savedMovie = watchedMovieRepository.save(movie);
-
         return WatchUtils.watchedMovieToWatchedMovieResponseConverter(savedMovie);
     }
 
     public List<WatchedMovieResponse> getUserWatchedMovies() {
 
         User user = userService.getCurrentUser();
+        List<WatchedMovie> watchedMovies = watchedMovieRepository.findByUser(user);
+        if (watchedMovies.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        return watchedMovieRepository
-                .findByUser(user)
-                .stream()
+        return watchedMovies.stream()
                 .map(WatchUtils::watchedMovieToWatchedMovieResponseConverter)
                 .toList();
     }
