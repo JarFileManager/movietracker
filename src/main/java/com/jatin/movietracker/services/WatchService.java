@@ -4,6 +4,7 @@ import com.jatin.movietracker.dtos.requests.MarkWatchedRequest;
 import com.jatin.movietracker.dtos.responses.WatchedMovieResponse;
 import com.jatin.movietracker.entities.User;
 import com.jatin.movietracker.entities.WatchedMovie;
+import com.jatin.movietracker.exceptions.ResourceNotFoundException;
 import com.jatin.movietracker.repositories.WatchedMovieRepository;
 import com.jatin.movietracker.utils.WatchUtils;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,7 @@ public class WatchService {
     public void deleteWatchedMovie(Long apiMovieId) {
 
         User user = userService.getCurrentUser();
-        WatchedMovie watchedMovie = watchedMovieRepository.findByUserAndApiMovieId(user, apiMovieId).orElseThrow();
+        WatchedMovie watchedMovie = watchedMovieRepository.findByUserAndApiMovieId(user, apiMovieId).orElseThrow(() -> new ResourceNotFoundException("Movie not found in watched list"));
 
         watchedMovieRepository.delete(watchedMovie);
     }

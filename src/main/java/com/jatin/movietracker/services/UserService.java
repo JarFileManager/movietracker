@@ -1,6 +1,7 @@
 package com.jatin.movietracker.services;
 
 import com.jatin.movietracker.entities.User;
+import com.jatin.movietracker.exceptions.UnauthorizedException;
 import com.jatin.movietracker.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,7 @@ public class UserService {
                 .getAuthentication()
                 .getName();
 
-        return userRepository.findByEmail(email).orElseThrow();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UnauthorizedException("You are not authorized"));
     }
 
 }

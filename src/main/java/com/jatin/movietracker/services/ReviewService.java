@@ -4,6 +4,8 @@ import com.jatin.movietracker.dtos.requests.CreateReviewRequest;
 import com.jatin.movietracker.dtos.responses.ReviewResponse;
 import com.jatin.movietracker.entities.Review;
 import com.jatin.movietracker.entities.User;
+import com.jatin.movietracker.exceptions.ResourceNotFoundException;
+import com.jatin.movietracker.exceptions.UnauthorizedException;
 import com.jatin.movietracker.repositories.ReviewRepository;
 import com.jatin.movietracker.utils.ReviewUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,10 +73,10 @@ public class ReviewService {
 
     public ReviewResponse updateReview(UUID reviewId, CreateReviewRequest createReviewRequest){
         User user = userService.getCurrentUser();
-        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         if (!review.getUser().getEmail().equals(user.getEmail())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You are not authorized to perform this action.");
         }
 
         review.setRating(createReviewRequest.getRating());
@@ -85,10 +87,10 @@ public class ReviewService {
 
     public void deleteReview(UUID reviewId){
         User user = userService.getCurrentUser();
-        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         if (!review.getUser().getEmail().equals(user.getEmail())) {
-            throw new RuntimeException("Unauthorized");
+            throw new UnauthorizedException("You are not authorized to perform this action.");
         }
         reviewRepository.delete(review);
     }

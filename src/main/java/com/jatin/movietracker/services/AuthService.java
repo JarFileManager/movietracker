@@ -4,6 +4,8 @@ import com.jatin.movietracker.dtos.requests.LoginRequest;
 import com.jatin.movietracker.dtos.requests.SignupRequest;
 import com.jatin.movietracker.dtos.responses.AuthResponse;
 import com.jatin.movietracker.entities.User;
+import com.jatin.movietracker.exceptions.DuplicateResourceException;
+import com.jatin.movietracker.exceptions.ResourceNotFoundException;
 import com.jatin.movietracker.repositories.UserRepository;
 import com.jatin.movietracker.security.JwtService;
 import com.jatin.movietracker.utils.AuthUtils;
@@ -35,11 +37,11 @@ public class AuthService {
 
     public AuthResponse authenticateSignup(SignupRequest signupRequest) {
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new DuplicateResourceException("Email already exists");
         }
 
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new DuplicateResourceException("Username already exists");
         }
 
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
@@ -60,12 +62,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
 
-        User user = userRepository.findByEmail(loginRequest.getEmail())
-                        .orElseThrow(
-                                () -> new RuntimeException(
-                                        "User not found"
-                                )
-                        );
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         String token = jwtService.generateToken(user.getEmail());
         return AuthUtils.buildAuthResponse(user.getUsername(), token, jwtService.getExpiration());

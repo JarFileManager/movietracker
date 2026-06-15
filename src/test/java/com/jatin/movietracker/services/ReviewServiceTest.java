@@ -153,7 +153,7 @@ class ReviewServiceTest {
 
         assertThatThrownBy(() -> reviewService.updateReview(reviewId, reviewRequest))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("Unauthorized");
+                .hasMessage("You are not authorized to perform this action.");
     }
 
     @Test
@@ -178,6 +178,6 @@ class ReviewServiceTest {
 
         assertThatThrownBy(() -> reviewService.deleteReview(reviewId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("Unauthorized");
+                .hasMessage("You are not authorized to perform this action.");
     }
 }
