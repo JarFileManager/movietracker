@@ -27,59 +27,29 @@ public class JwtService {
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(
-                secret.getBytes()
-        );
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(
-            String email
-    ) {
+    public String generateToken(String email) {
 
         return Jwts.builder()
                 .setSubject(email)
-
                 .setIssuedAt(new Date())
-
-                .setExpiration(
-                        new Date(
-                                System.currentTimeMillis()
-                                        + expiration
-                        )
-                )
-
-                .signWith(
-                        key,
-                        SignatureAlgorithm.HS256
-                )
-
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String extractEmail(
-            String token
-    ) {
-
-        return extractClaims(token)
-                .getSubject();
+    public String extractEmail(String token) {
+        return extractClaims(token).getSubject();
     }
 
-    public Boolean isTokenValid(
-            String token,
-            UserDetails userDetails
-    ) {
-
+    public Boolean isTokenValid(String token, UserDetails userDetails) {
         String email = extractEmail(token);
-
-        return email.equals(
-                userDetails.getUsername()
-        );
+        return email.equals(userDetails.getUsername());
     }
 
-    private Claims extractClaims(
-            String token
-    ) {
-
+    private Claims extractClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(key)
                 .build().parseSignedClaims(token).getPayload();
