@@ -14,6 +14,7 @@ public class ReviewUtils {
         response.setComment(review.getComment());
         response.setUsername(review.getUser().getUsername());
         response.setCreatedAt(review.getCreatedAt());
+        response.setMovieTitle(review.getMovieTitle());
 
         return response;
     }

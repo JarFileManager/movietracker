@@ -45,6 +45,7 @@ public class ReviewService {
 
         review.setRating(request.getRating());
         review.setComment(request.getComment());
+        review.setMovieTitle(request.getMovieTitle());
         Review saved = reviewRepository.save(review);
 
         return ReviewUtils.reviewToReviewResponseConverter(saved);

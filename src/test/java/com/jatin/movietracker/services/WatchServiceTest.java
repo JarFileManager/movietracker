@@ -34,7 +34,7 @@ class WatchServiceTest {
 
     @Test
     void markMovieAsWatched_NewMovie_ShouldCreateAndReturnResponse() {
-        MarkWatchedRequest request = new MarkWatchedRequest(1L, true);
+        MarkWatchedRequest request = new MarkWatchedRequest(1L, true,  "My Movie");
         User user = new User();
         user.setId(UUID.randomUUID());
 
@@ -46,6 +46,7 @@ class WatchServiceTest {
         savedMovie.setUser(user);
         savedMovie.setApiMovieId(1L);
         savedMovie.setWatched(true);
+        savedMovie.setMovieTitle("My Movie");
 
         when(watchedMovieRepository.save(any(WatchedMovie.class))).thenReturn(savedMovie);
 
@@ -54,12 +55,13 @@ class WatchServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getApiMovieId()).isEqualTo(1L);
         assertThat(result.getWatched()).isTrue();
+        assertThat(result.getMovieTitle()).isEqualTo("My Movie");
         verify(watchedMovieRepository, times(1)).save(any(WatchedMovie.class));
     }
 
     @Test
     void markMovieAsWatched_ExistingMovie_ShouldUpdateAndReturnResponse() {
-        MarkWatchedRequest request = new MarkWatchedRequest(1L, false);
+        MarkWatchedRequest request = new MarkWatchedRequest(1L, false,  "My Movie");
         User user = new User();
         user.setId(UUID.randomUUID());
 
@@ -68,6 +70,7 @@ class WatchServiceTest {
         existingMovie.setUser(user);
         existingMovie.setApiMovieId(1L);
         existingMovie.setWatched(true);
+        existingMovie.setMovieTitle("My Movie");
 
         when(userService.getCurrentUser()).thenReturn(user);
         when(watchedMovieRepository.findByUserAndApiMovieId(user, 1L)).thenReturn(Optional.of(existingMovie));
@@ -77,6 +80,7 @@ class WatchServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getWatched()).isFalse();
+        assertThat(result.getMovieTitle()).isEqualTo("My Movie");
         verify(watchedMovieRepository, times(1)).save(existingMovie);
     }
 

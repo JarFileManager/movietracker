@@ -42,4 +42,6 @@ public class Review extends BaseEntity{
     @Column(columnDefinition = "TEXT")
     private String comment;
 
+    private String movieTitle;
+
 }

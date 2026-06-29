@@ -14,4 +14,5 @@ public class WatchedMovieResponse {
     private Long apiMovieId;
     private Boolean watched;
     private LocalDateTime createdAt;
+    private String movieTitle;
 }

@@ -30,4 +30,6 @@ public class WatchedMovie extends BaseEntity {
 
     private Boolean watched;
 
+    private String movieTitle;
+
 }

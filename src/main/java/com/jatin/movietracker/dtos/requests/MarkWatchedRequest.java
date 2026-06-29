@@ -9,4 +9,5 @@ import lombok.*;
 public class MarkWatchedRequest {
     private Long apiMovieId;
     private Boolean watched;
+    private String movieTitle;
 }

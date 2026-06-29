@@ -11,7 +11,7 @@ public class WatchUtils {
         response.setApiMovieId(movie.getApiMovieId());
         response.setWatched(movie.getWatched());
         response.setCreatedAt(movie.getCreatedAt());
-
+        response.setMovieTitle(movie.getMovieTitle());
         return response;
     }
 }

@@ -39,6 +39,8 @@ public class WatchService {
         movie.setUser(user);
         movie.setApiMovieId(request.getApiMovieId());
         movie.setWatched(request.getWatched());
+        movie.setMovieTitle(request.getMovieTitle());
+
 
         WatchedMovie savedMovie = watchedMovieRepository.save(movie);
         return WatchUtils.watchedMovieToWatchedMovieResponseConverter(savedMovie);
