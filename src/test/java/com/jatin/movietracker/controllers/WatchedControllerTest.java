@@ -30,11 +30,10 @@ class WatchedControllerTest {
 
     @Test
     void markMovieAsWatched_ShouldReturnWatchedMovieResponse() {
-        MarkWatchedRequest request = new MarkWatchedRequest(1L, true, "My Movie");
+        MarkWatchedRequest request = new MarkWatchedRequest(1L, "My Movie");
         WatchedMovieResponse response = new WatchedMovieResponse();
         response.setId(UUID.randomUUID());
         response.setApiMovieId(1L);
-        response.setWatched(true);
         response.setMovieTitle("My Movie");
 
         when(watchService.markMovieAsWatched(any(MarkWatchedRequest.class))).thenReturn(response);
@@ -44,7 +43,6 @@ class WatchedControllerTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody()).isNotNull();
         assertThat(result.getBody().getApiMovieId()).isEqualTo(1L);
-        assertThat(result.getBody().getWatched()).isTrue();
         assertThat(result.getBody().getMovieTitle()).isEqualTo("My Movie");
     }
 

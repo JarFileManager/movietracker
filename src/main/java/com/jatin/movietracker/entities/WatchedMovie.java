@@ -28,8 +28,6 @@ public class WatchedMovie extends BaseEntity {
     @Column(name = "api_movie_id", nullable = false)
     private Long apiMovieId;
 
-    private Boolean watched;
-
     private String movieTitle;
 
 }

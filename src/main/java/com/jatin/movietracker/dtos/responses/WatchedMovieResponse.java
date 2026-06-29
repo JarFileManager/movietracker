@@ -12,7 +12,6 @@ import java.util.UUID;
 public class WatchedMovieResponse {
     private UUID id;
     private Long apiMovieId;
-    private Boolean watched;
     private LocalDateTime createdAt;
     private String movieTitle;
 }

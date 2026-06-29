@@ -19,14 +19,12 @@ class WatchUtilsTest {
         WatchedMovie movie = new WatchedMovie();
         movie.setId(UUID.randomUUID());
         movie.setApiMovieId(1L);
-        movie.setWatched(true);
         movie.setCreatedAt(LocalDateTime.now());
 
         WatchedMovieResponse response = WatchUtils.watchedMovieToWatchedMovieResponseConverter(movie);
 
         assertThat(response.getId()).isEqualTo(movie.getId());
         assertThat(response.getApiMovieId()).isEqualTo(movie.getApiMovieId());
-        assertThat(response.getWatched()).isEqualTo(movie.getWatched());
         assertThat(response.getCreatedAt()).isEqualTo(movie.getCreatedAt());
     }
 }

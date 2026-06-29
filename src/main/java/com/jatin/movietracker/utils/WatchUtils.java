@@ -9,7 +9,6 @@ public class WatchUtils {
         WatchedMovieResponse response = new WatchedMovieResponse();
         response.setId(movie.getId());
         response.setApiMovieId(movie.getApiMovieId());
-        response.setWatched(movie.getWatched());
         response.setCreatedAt(movie.getCreatedAt());
         response.setMovieTitle(movie.getMovieTitle());
         return response;

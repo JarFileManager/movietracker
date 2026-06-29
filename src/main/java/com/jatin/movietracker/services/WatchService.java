@@ -28,7 +28,6 @@ public class WatchService {
 
         if (existingMovie.isPresent()) {
             WatchedMovie movie = existingMovie.get();
-            movie.setWatched(request.getWatched());
             watchedMovieRepository.save(movie);
 
             return WatchUtils.watchedMovieToWatchedMovieResponseConverter(movie);
@@ -38,7 +37,6 @@ public class WatchService {
 
         movie.setUser(user);
         movie.setApiMovieId(request.getApiMovieId());
-        movie.setWatched(request.getWatched());
         movie.setMovieTitle(request.getMovieTitle());
 
 

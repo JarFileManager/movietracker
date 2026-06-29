@@ -34,7 +34,7 @@ class WatchServiceTest {
 
     @Test
     void markMovieAsWatched_NewMovie_ShouldCreateAndReturnResponse() {
-        MarkWatchedRequest request = new MarkWatchedRequest(1L, true,  "My Movie");
+        MarkWatchedRequest request = new MarkWatchedRequest(1L,  "My Movie");
         User user = new User();
         user.setId(UUID.randomUUID());
 
@@ -45,7 +45,6 @@ class WatchServiceTest {
         savedMovie.setId(UUID.randomUUID());
         savedMovie.setUser(user);
         savedMovie.setApiMovieId(1L);
-        savedMovie.setWatched(true);
         savedMovie.setMovieTitle("My Movie");
 
         when(watchedMovieRepository.save(any(WatchedMovie.class))).thenReturn(savedMovie);
@@ -54,14 +53,13 @@ class WatchServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getApiMovieId()).isEqualTo(1L);
-        assertThat(result.getWatched()).isTrue();
         assertThat(result.getMovieTitle()).isEqualTo("My Movie");
         verify(watchedMovieRepository, times(1)).save(any(WatchedMovie.class));
     }
 
     @Test
     void markMovieAsWatched_ExistingMovie_ShouldUpdateAndReturnResponse() {
-        MarkWatchedRequest request = new MarkWatchedRequest(1L, false,  "My Movie");
+        MarkWatchedRequest request = new MarkWatchedRequest(1L,  "My Movie");
         User user = new User();
         user.setId(UUID.randomUUID());
 
@@ -69,7 +67,6 @@ class WatchServiceTest {
         existingMovie.setId(UUID.randomUUID());
         existingMovie.setUser(user);
         existingMovie.setApiMovieId(1L);
-        existingMovie.setWatched(true);
         existingMovie.setMovieTitle("My Movie");
 
         when(userService.getCurrentUser()).thenReturn(user);
@@ -79,7 +76,6 @@ class WatchServiceTest {
         WatchedMovieResponse result = watchService.markMovieAsWatched(request);
 
         assertThat(result).isNotNull();
-        assertThat(result.getWatched()).isFalse();
         assertThat(result.getMovieTitle()).isEqualTo("My Movie");
         verify(watchedMovieRepository, times(1)).save(existingMovie);
     }
@@ -89,7 +85,7 @@ class WatchServiceTest {
         User user = new User();
         WatchedMovie movie = new WatchedMovie();
         movie.setApiMovieId(1L);
-        movie.setWatched(true);
+        movie.setMovieTitle("My Movie");
 
         when(userService.getCurrentUser()).thenReturn(user);
         when(watchedMovieRepository.findByUser(user)).thenReturn(List.of(movie));
