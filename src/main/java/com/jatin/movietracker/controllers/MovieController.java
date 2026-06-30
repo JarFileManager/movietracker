@@ -39,4 +39,25 @@ public class MovieController {
     public ResponseEntity<ApiMovieResponse> getMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(movieService.getMovie(movieId));
     }
+
+    @GetMapping("/trending")
+    public ResponseEntity<List<ApiMovieResponse>> getTrendingMovies() {
+        return ResponseEntity.ok(movieService.getTrendingMovies());
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<ApiMovieResponse>> getPopularMovies() {
+        return ResponseEntity.ok(movieService.getPopularMovies());
+    }
+
+    @GetMapping("/now-playing")
+    public ResponseEntity<List<ApiMovieResponse>> getNowPlayingMovies() {
+        return ResponseEntity.ok(movieService.getNowPlayingMovies());
+
+    }
+
+    @GetMapping("/trending-tv")
+    public ResponseEntity<List<ApiMovieResponse>> getTrendingTvShows() {
+        return ResponseEntity.ok(movieService.getTrendingTvShows());
+    }
 }

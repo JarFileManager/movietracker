@@ -9,6 +9,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
+import java.util.List;
+
 @Component
 public class TmdbClient {
 
@@ -41,6 +44,46 @@ public class TmdbClient {
         }
         HttpEntity<Void> entity = createEntity();
         return restTemplate.exchange(url, HttpMethod.GET, entity, TmdbSearchResponse.class).getBody();
+    }
+
+    public List<TmdbMovie> getTrendingMovies() {
+        String url = tmdbProperties.getBaseUrl() + "/trending/movie/day";
+        HttpEntity<Void> entity = createEntity();
+        TmdbSearchResponse response = restTemplate.exchange(url, HttpMethod.GET, entity, TmdbSearchResponse.class).getBody();
+        if(response == null){
+            return Collections.emptyList();
+        }
+        return response.getResults();
+    }
+
+    public List<TmdbMovie> getPopularMovies() {
+        String url = tmdbProperties.getBaseUrl() + "/movie/popular";
+        HttpEntity<Void> entity = createEntity();
+        TmdbSearchResponse response = restTemplate.exchange(url, HttpMethod.GET, entity, TmdbSearchResponse.class).getBody();
+        if(response == null){
+            return Collections.emptyList();
+        }
+        return response.getResults();
+    }
+
+    public List<TmdbMovie> getNowPlayingMovies() {
+        String url = tmdbProperties.getBaseUrl() + "/movie/now_playing";
+        HttpEntity<Void> entity = createEntity();
+        TmdbSearchResponse response = restTemplate.exchange(url, HttpMethod.GET, entity, TmdbSearchResponse.class).getBody();
+        if(response == null){
+            return Collections.emptyList();
+        }
+        return response.getResults();
+    }
+
+    public List<TmdbMovie> getTrendingTvShows() {
+        String url = tmdbProperties.getBaseUrl() + "/trending/tv/day";
+        HttpEntity<Void> entity = createEntity();
+        TmdbSearchResponse response = restTemplate.exchange(url, HttpMethod.GET, entity, TmdbSearchResponse.class).getBody();
+        if(response == null){
+            return Collections.emptyList();
+        }
+        return response.getResults();
     }
 
     private HttpEntity<Void> createEntity(){

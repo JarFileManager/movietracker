@@ -50,4 +50,32 @@ public class MovieService {
                 .map(MovieUtils::convert)
                 .toList();
     }
+
+    public List<ApiMovieResponse> getTrendingMovies() {
+        return tmdbClient.getTrendingMovies()
+                .stream()
+                .map(MovieUtils::convert)
+                .toList();
+    }
+
+    public List<ApiMovieResponse> getPopularMovies() {
+        return tmdbClient.getPopularMovies()
+                .stream()
+                .map(MovieUtils::convert)
+                .toList();
+    }
+
+    public List<ApiMovieResponse> getNowPlayingMovies() {
+        return tmdbClient.getNowPlayingMovies()
+                .stream()
+                .map(MovieUtils::convert)
+                .toList();
+    }
+
+    public List<ApiMovieResponse> getTrendingTvShows() {
+        return tmdbClient.getTrendingTvShows()
+                .stream()
+                .map(MovieUtils::convert)
+                .toList();
+    }
 }

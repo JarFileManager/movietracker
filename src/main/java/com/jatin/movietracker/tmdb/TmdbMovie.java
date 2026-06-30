@@ -8,6 +8,7 @@ public class TmdbMovie {
 
     private Long id;
     private String title;
+    private String name;
     private String overview;
     private String poster_path;
     private Double vote_average;

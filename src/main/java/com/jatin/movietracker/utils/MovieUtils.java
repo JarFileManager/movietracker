@@ -11,14 +11,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MovieUtils {
 
-    private static final String IMAGE_BASE_URL =
-            "https://image.tmdb.org/t/p/w500";
+    private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
     public static ApiMovieResponse convert(TmdbMovie movie){
         ApiMovieResponse response = new ApiMovieResponse();
-
+        String title = movie.getTitle() != null ? movie.getTitle() : movie.getName();
         response.setId(movie.getId());
-        response.setTitle(movie.getTitle());
+        response.setTitle(title);
         response.setOverview(movie.getOverview());
         response.setRating(movie.getVote_average());
         response.setReleaseDate(getDateTime(movie.getRelease_date()));
