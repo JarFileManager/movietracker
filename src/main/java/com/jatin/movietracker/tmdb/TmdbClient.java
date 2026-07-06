@@ -56,8 +56,8 @@ public class TmdbClient {
         return response.getResults();
     }
 
-    public List<TmdbMovie> getPopularMovies() {
-        String url = tmdbProperties.getBaseUrl() + "/movie/popular";
+    public List<TmdbMovie> getTopRatedMovies() {
+        String url = tmdbProperties.getBaseUrl() + "/movie/top_rated";
         HttpEntity<Void> entity = createEntity();
         TmdbSearchResponse response = restTemplate.exchange(url, HttpMethod.GET, entity, TmdbSearchResponse.class).getBody();
         if(response == null){
@@ -95,9 +95,27 @@ public class TmdbClient {
     }
 
     private String addFiltersToUrl(GetRandomMovieRequest request, String url) {
-        if(request.getGenreIds() != null && !request.getGenreIds().isEmpty()) {
-            url += "?with_genres=" + MovieUtils.convertIntegerListToString(request.getGenreIds());
+        StringBuilder builder = new StringBuilder(url);
+        builder.append("?sort_by=popularity.desc");
+        if (request.getGenreIds() != null && !request.getGenreIds().isEmpty()) {
+            builder.append("&with_genres=").append(MovieUtils.convertIntegerListToString(request.getGenreIds()));
         }
-        return url;
+
+        if (request.getFromYear() != null) {
+            builder.append("&primary_release_date.gte=").append(request.getFromYear()).append("-01-01");
+        }
+
+        if (request.getToYear() != null) {
+            builder.append("&primary_release_date.lte=").append(request.getToYear()).append("-12-31");
+        }
+
+        if (request.getMinimumRating() != null) {
+            builder.append("&vote_average.gte=").append(request.getMinimumRating());
+        }
+
+        if (request.getIncludeAdult() != null) {
+            builder.append("&include_adult=").append(request.getIncludeAdult());
+        }
+        return builder.toString();
     }
 }

@@ -14,4 +14,12 @@ import java.util.List;
 public class GetRandomMovieRequest {
 
     private List<Integer> genreIds;
+
+    private Integer fromYear;
+
+    private Integer toYear;
+
+    private Double minimumRating;
+
+    private Boolean includeAdult;
 }

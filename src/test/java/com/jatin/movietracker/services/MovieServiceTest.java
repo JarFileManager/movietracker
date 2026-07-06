@@ -22,6 +22,9 @@ class MovieServiceTest {
     @Mock
     private TmdbClient tmdbClient;
 
+    @Mock
+    private PreferenceService preferenceService;
+
     @InjectMocks
     private MovieService movieService;
 

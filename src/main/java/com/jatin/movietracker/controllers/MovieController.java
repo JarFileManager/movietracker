@@ -45,9 +45,9 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getTrendingMovies());
     }
 
-    @GetMapping("/popular")
-    public ResponseEntity<List<ApiMovieResponse>> getPopularMovies() {
-        return ResponseEntity.ok(movieService.getPopularMovies());
+    @GetMapping("/top-rated")
+    public ResponseEntity<List<ApiMovieResponse>> getTopRatedMovies() {
+        return ResponseEntity.ok(movieService.getTopRatedMovies());
     }
 
     @GetMapping("/now-playing")

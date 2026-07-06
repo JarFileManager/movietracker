@@ -16,10 +16,12 @@ import java.util.List;
 public class MovieService {
 
     private final TmdbClient tmdbClient;
+    private final PreferenceService preferenceService;
 
     @Autowired
-    public MovieService(TmdbClient tmdbClient) {
+    public MovieService(TmdbClient tmdbClient, PreferenceService preferenceService) {
         this.tmdbClient = tmdbClient;
+        this.preferenceService = preferenceService;
     }
 
     public List<ApiMovieResponse> searchMovies(String query) {
@@ -38,7 +40,8 @@ public class MovieService {
     }
 
     public ApiMovieResponse getRandomMovie() {
-        TmdbSearchResponse response = tmdbClient.getRandomMovie(null);
+        GetRandomMovieRequest request = preferenceService.getMyPreferences();
+        TmdbSearchResponse response = tmdbClient.getRandomMovie(request);
         return MovieUtils.convert(response.getResults().get(MovieUtils.getRandomInt(0, response.getResults().size() - 1)));
     }
 
@@ -58,8 +61,8 @@ public class MovieService {
                 .toList();
     }
 
-    public List<ApiMovieResponse> getPopularMovies() {
-        return tmdbClient.getPopularMovies()
+    public List<ApiMovieResponse> getTopRatedMovies() {
+        return tmdbClient.getTopRatedMovies()
                 .stream()
                 .map(MovieUtils::convert)
                 .toList();
