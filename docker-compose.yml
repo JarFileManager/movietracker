@@ -1,0 +1,36 @@
+services:
+
+  postgres:
+
+    image: postgres:17
+
+    container_name: movietracker-postgres
+
+    environment:
+      POSTGRES_DB: movie_tracker
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+
+    build: .
+
+    container_name: movietracker-backend
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JWT_SECRET: ${JWT_SECRET}
+      TMDB_ACCESS_TOKEN: ${TMDB_ACCESS_TOKEN}
+
+    depends_on:
+      - postgres
+
+volumes:
+
+  postgres_data:
