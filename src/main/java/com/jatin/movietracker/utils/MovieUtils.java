@@ -1,11 +1,13 @@
 package com.jatin.movietracker.utils;
 
+import com.jatin.movietracker.dtos.requests.GetRandomMovieRequest;
 import com.jatin.movietracker.dtos.responses.ApiMovieResponse;
 import com.jatin.movietracker.tmdb.TmdbMovie;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -48,5 +50,15 @@ public class MovieUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static GetRandomMovieRequest getDefaultRequest() {
+        GetRandomMovieRequest request = new GetRandomMovieRequest();
+        request.setGenreIds(Collections.emptyList());
+        request.setFromYear(1990);
+        request.setToYear(LocalDate.now().getYear());
+        request.setMinimumRating(7.0);
+        request.setIncludeAdult(false);
+        return request;
     }
 }

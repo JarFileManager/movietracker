@@ -5,6 +5,7 @@ import com.jatin.movietracker.dtos.requests.GetRandomMovieRequest;
 import com.jatin.movietracker.entities.User;
 import com.jatin.movietracker.entities.UserPreference;
 import com.jatin.movietracker.repositories.PreferenceRepository;
+import com.jatin.movietracker.utils.MovieUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class PreferenceService {
                         throw new RuntimeException(e);
                     }
                 })
-                .orElseGet(GetRandomMovieRequest::new);
+                .orElseGet(MovieUtils::getDefaultRequest);
     }
 
 
