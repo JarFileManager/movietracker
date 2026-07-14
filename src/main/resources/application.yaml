@@ -23,3 +23,6 @@ jwt:
 tmdb:
   access-token: ${TMDB_ACCESS_TOKEN}
   base-url: ${TMDB_BASE_URL:https://api.themoviedb.org/3}
+
+frontend:
+  url: ${FRONTEND_URL}}
