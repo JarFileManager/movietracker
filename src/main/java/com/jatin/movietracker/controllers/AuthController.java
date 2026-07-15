@@ -1,5 +1,6 @@
 package com.jatin.movietracker.controllers;
 
+import com.jatin.movietracker.dtos.Role;
 import com.jatin.movietracker.dtos.requests.LoginRequest;
 import com.jatin.movietracker.dtos.requests.SignupRequest;
 import com.jatin.movietracker.dtos.responses.AuthResponse;
@@ -7,6 +8,7 @@ import com.jatin.movietracker.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +32,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok().body(authService.authenticateLogin(loginRequest));
+    }
+
+    @GetMapping("/getMyRole")
+    public ResponseEntity<Role> getMyRole() {
+        return ResponseEntity.ok().body(authService.getMyRole());
     }
 }

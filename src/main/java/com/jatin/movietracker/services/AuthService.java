@@ -1,5 +1,6 @@
 package com.jatin.movietracker.services;
 
+import com.jatin.movietracker.dtos.Role;
 import com.jatin.movietracker.dtos.requests.LoginRequest;
 import com.jatin.movietracker.dtos.requests.SignupRequest;
 import com.jatin.movietracker.dtos.responses.AuthResponse;
@@ -27,12 +28,15 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final UserService userService;
+
     @Autowired
-    public AuthService(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, JwtService jwtService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserService userService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     public AuthResponse authenticateSignup(SignupRequest signupRequest) {
@@ -66,5 +70,10 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getEmail());
         return AuthUtils.buildAuthResponse(user.getUsername(), token, jwtService.getExpiration());
+    }
+
+    public Role getMyRole(){
+        User user = userService.getCurrentUser();
+        return user.getRole();
     }
 }
