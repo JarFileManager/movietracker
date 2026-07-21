@@ -12,6 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +24,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -108,24 +113,29 @@ class ReviewServiceTest {
     }
 
     @Test
-    void getMyMovieReviews_NotEmpty_ShouldReturnList() {
+    void getMyMovieReviews_NotEmpty_ShouldReturnPage() {
         when(userService.getCurrentUser()).thenReturn(testUser);
-        when(reviewRepository.findByUser(testUser)).thenReturn(List.of(testReview));
+        Page<Review> reviewPage = new PageImpl<>(List.of(testReview), PageRequest.of(0, 10), 1);
+        when(reviewRepository.findByUserOrderByCreatedAtDesc(eq(testUser), any())).thenReturn(reviewPage);
 
-        List<ReviewResponse> responses = reviewService.getMyMovieReviews();
+        Page<ReviewResponse> responses = reviewService.getMyMovieReviews(0, 10);
 
-        assertThat(responses).hasSize(1);
-        assertThat(responses.get(0).getApiMovieId()).isEqualTo(123L);
+        assertThat(responses).isNotEmpty();
+        assertThat(responses.getContent()).hasSize(1);
+        assertThat(responses.getContent().get(0).getApiMovieId()).isEqualTo(123L);
+        assertThat(responses.getTotalElements()).isEqualTo(1);
     }
 
     @Test
-    void getMyMovieReviews_Empty_ShouldReturnEmptyList() {
+    void getMyMovieReviews_Empty_ShouldReturnEmptyPage() {
         when(userService.getCurrentUser()).thenReturn(testUser);
-        when(reviewRepository.findByUser(testUser)).thenReturn(Collections.emptyList());
+        Page<Review> emptyPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 10), 0);
+        when(reviewRepository.findByUserOrderByCreatedAtDesc(eq(testUser), any())).thenReturn(emptyPage);
 
-        List<ReviewResponse> responses = reviewService.getMyMovieReviews();
+        Page<ReviewResponse> responses = reviewService.getMyMovieReviews(0, 10);
 
-        assertThat(responses).isEmpty();
+        assertThat(responses.getContent()).isEmpty();
+        assertThat(responses.getTotalElements()).isEqualTo(0);
     }
 
     @Test

@@ -8,6 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -15,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -65,12 +67,15 @@ class ReviewControllerTest {
     @Test
     void getMyReviews_ShouldReturnOk() {
         ReviewResponse response = new ReviewResponse();
-        when(reviewService.getMyMovieReviews()).thenReturn(List.of(response));
+        Page<ReviewResponse> reviewPage = new PageImpl<>(List.of(response), PageRequest.of(0, 10), 1);
+        when(reviewService.getMyMovieReviews(0, 10)).thenReturn(reviewPage);
 
-        ResponseEntity<List<ReviewResponse>> result = reviewController.getMyReviews();
+        ResponseEntity<Page<ReviewResponse>> result = reviewController.getMyReviews(0, 10);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).hasSize(1);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getContent()).hasSize(1);
+        assertThat(result.getBody().getTotalElements()).isEqualTo(1);
     }
 
     @Test

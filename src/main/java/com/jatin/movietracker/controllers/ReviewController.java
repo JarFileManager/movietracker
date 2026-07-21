@@ -4,10 +4,10 @@ import com.jatin.movietracker.dtos.requests.CreateReviewRequest;
 import com.jatin.movietracker.dtos.responses.ReviewResponse;
 import com.jatin.movietracker.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,8 +36,8 @@ public class ReviewController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<ReviewResponse>> getMyReviews() {
-        return ResponseEntity.ok().body(reviewService.getMyMovieReviews());
+    public ResponseEntity<Page<ReviewResponse>> getMyReviews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(reviewService.getMyMovieReviews(page, size));
     }
 
     @PutMapping("/{reviewId}")

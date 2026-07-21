@@ -9,13 +9,13 @@ import com.jatin.movietracker.exceptions.UnauthorizedException;
 import com.jatin.movietracker.repositories.ReviewRepository;
 import com.jatin.movietracker.utils.ReviewUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -62,14 +62,11 @@ public class ReviewService {
         return null;
     }
 
-    public List<ReviewResponse> getMyMovieReviews(){
+    public Page<ReviewResponse> getMyMovieReviews(int page, int size){
         User user = userService.getCurrentUser();
-        List<Review> reviews = reviewRepository.findByUser(user);
-        if(reviews.isEmpty()){
-            return Collections.emptyList();
-        }
-
-        return reviews.stream().map(ReviewUtils::reviewToReviewResponseConverter).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviews = reviewRepository.findByUserOrderByCreatedAtDesc(user, pageable);
+        return reviews.map(ReviewUtils::reviewToReviewResponseConverter);
     }
 
     public ReviewResponse updateReview(UUID reviewId, CreateReviewRequest createReviewRequest){
