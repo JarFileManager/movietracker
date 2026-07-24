@@ -4,10 +4,10 @@ import com.jatin.movietracker.dtos.requests.MarkWatchedRequest;
 import com.jatin.movietracker.dtos.responses.WatchedMovieResponse;
 import com.jatin.movietracker.services.WatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/watched")
@@ -26,8 +26,8 @@ public class WatchedController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<WatchedMovieResponse>> getUserWatchedMovies() {
-        return ResponseEntity.ok().body(watchService.getUserWatchedMovies());
+    public ResponseEntity<Page<WatchedMovieResponse>> getUserWatchedMovies(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        return ResponseEntity.ok().body(watchService.getUserWatchedMovies(page, size));
     }
 
     @DeleteMapping("/{apiMovieId}")

@@ -7,10 +7,11 @@ import com.jatin.movietracker.entities.Watchlist;
 import com.jatin.movietracker.repositories.WatchlistRepository;
 import com.jatin.movietracker.utils.WatchUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,15 +41,12 @@ public class WatchlistService {
         return WatchUtils.watchlistToWatchlistResponseConverter(watchlist);
     }
 
-    public List<WatchlistResponse> getMyWatchlist() {
+    public Page<WatchlistResponse> getMyWatchlist(Integer page, Integer size) {
         User user = userService.getCurrentUser();
-        List<Watchlist> watchlist = watchlistRepository.findByUser(user);
-        if (watchlist.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return watchlist.stream()
-                .map(WatchUtils::watchlistToWatchlistResponseConverter)
-                .toList();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Watchlist> watchlist = watchlistRepository.findByUserOrderByCreatedAtDesc(user, pageable);
+
+        return watchlist.map(WatchUtils::watchlistToWatchlistResponseConverter);
     }
 
     public String removeFromWatchlist(Integer apiMovieId) {

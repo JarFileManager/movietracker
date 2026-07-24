@@ -36,7 +36,7 @@ public class ReviewController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Page<ReviewResponse>> getMyReviews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<ReviewResponse>> getMyReviews(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         return ResponseEntity.ok(reviewService.getMyMovieReviews(page, size));
     }
 

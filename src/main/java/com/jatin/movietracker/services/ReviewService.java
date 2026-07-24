@@ -62,7 +62,7 @@ public class ReviewService {
         return null;
     }
 
-    public Page<ReviewResponse> getMyMovieReviews(int page, int size){
+    public Page<ReviewResponse> getMyMovieReviews(Integer page, Integer size){
         User user = userService.getCurrentUser();
         Pageable pageable = PageRequest.of(page, size);
         Page<Review> reviews = reviewRepository.findByUserOrderByCreatedAtDesc(user, pageable);

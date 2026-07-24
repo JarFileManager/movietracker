@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -88,12 +91,12 @@ class WatchServiceTest {
         movie.setMovieTitle("My Movie");
 
         when(userService.getCurrentUser()).thenReturn(user);
-        when(watchedMovieRepository.findByUser(user)).thenReturn(List.of(movie));
+        when(watchedMovieRepository.findByUserOrderByCreatedAtDesc(any(User.class), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(movie)));
 
-        List<WatchedMovieResponse> result = watchService.getUserWatchedMovies();
+        Page<WatchedMovieResponse> result = watchService.getUserWatchedMovies(0, 10);
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getApiMovieId()).isEqualTo(1L);
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().get(0).getApiMovieId()).isEqualTo(1L);
     }
 
     @Test
@@ -101,11 +104,11 @@ class WatchServiceTest {
         User user = new User();
 
         when(userService.getCurrentUser()).thenReturn(user);
-        when(watchedMovieRepository.findByUser(user)).thenReturn(Collections.emptyList());
+        when(watchedMovieRepository.findByUserOrderByCreatedAtDesc(any(User.class), any(Pageable.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        List<WatchedMovieResponse> result = watchService.getUserWatchedMovies();
+        Page<WatchedMovieResponse> result = watchService.getUserWatchedMovies(0, 10);
 
-        assertThat(result).isEmpty();
+        assertThat(result.getContent()).isEmpty();
     }
 
     @Test

@@ -8,10 +8,11 @@ import com.jatin.movietracker.exceptions.ResourceNotFoundException;
 import com.jatin.movietracker.repositories.WatchedMovieRepository;
 import com.jatin.movietracker.utils.WatchUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,17 +45,11 @@ public class WatchService {
         return WatchUtils.watchedMovieToWatchedMovieResponseConverter(savedMovie);
     }
 
-    public List<WatchedMovieResponse> getUserWatchedMovies() {
-
+    public Page<WatchedMovieResponse> getUserWatchedMovies(Integer page, Integer size) {
         User user = userService.getCurrentUser();
-        List<WatchedMovie> watchedMovies = watchedMovieRepository.findByUser(user);
-        if (watchedMovies.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return watchedMovies.stream()
-                .map(WatchUtils::watchedMovieToWatchedMovieResponseConverter)
-                .toList();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WatchedMovie> watchedMovies = watchedMovieRepository.findByUserOrderByCreatedAtDesc(user, pageable);
+        return watchedMovies.map(WatchUtils::watchedMovieToWatchedMovieResponseConverter);
     }
 
     public void deleteWatchedMovie(Long apiMovieId) {

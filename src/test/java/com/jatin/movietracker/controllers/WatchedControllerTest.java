@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,13 +54,16 @@ class WatchedControllerTest {
         response.setApiMovieId(1L);
         List<WatchedMovieResponse> responses = List.of(response);
 
-        when(watchService.getUserWatchedMovies()).thenReturn(responses);
+        Page<WatchedMovieResponse> responsesPage = new PageImpl<>(responses);
 
-        ResponseEntity<List<WatchedMovieResponse>> result = watchedController.getUserWatchedMovies();
+        when(watchService.getUserWatchedMovies(0, 10)).thenReturn(responsesPage);
+
+        ResponseEntity<Page<WatchedMovieResponse>> result = watchedController.getUserWatchedMovies(0, 10);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).hasSize(1);
-        assertThat(result.getBody().get(0).getApiMovieId()).isEqualTo(1L);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getContent()).hasSize(1);
+        assertThat(result.getBody().getContent().get(0).getApiMovieId()).isEqualTo(1L);
     }
 
     @Test

@@ -4,10 +4,10 @@ import com.jatin.movietracker.dtos.requests.WatchlistRequest;
 import com.jatin.movietracker.dtos.responses.WatchlistResponse;
 import com.jatin.movietracker.services.WatchlistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/watchlist")
@@ -21,8 +21,8 @@ public class WatchlistController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<WatchlistResponse>> getWatchlist() {
-        List<WatchlistResponse> watchlist = watchlistService.getMyWatchlist();
+    public ResponseEntity<Page<WatchlistResponse>> getWatchlist(@RequestParam Integer page, @RequestParam Integer size) {
+        Page<WatchlistResponse> watchlist = watchlistService.getMyWatchlist(page, size);
         return ResponseEntity.ok(watchlist);
     }
 
